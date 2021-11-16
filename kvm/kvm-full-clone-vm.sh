@@ -17,7 +17,7 @@ virsh define $dst_vm_name.xml
 new_uuid=$(virsh domuuid $dst_vm_name)
 new_mac=$(virsh domiflist $dst_vm_name | sed -e '1,2d' -e '/^$/d' | awk '{ print $ 5}')
 
-virsh snapshot-list $src_vm_name |sed -e '1,2d' -e '/^$/d'|cut -d' ' -f2| while read -r line; do
+virsh snapshot-list win7_1_def --tree | sed -E "s/ *.{1,2} +//" | sed -E "s/\|//" | sed -E "/^$/d" |sed -e '1,2d' -e '/^$/d'|cut -d' ' -f2| while read -r line; do
   new_snpsh_name=$(echo "${line}" | sed "s/${src_vm_name}/${dst_vm_name}/")
   virsh snapshot-dumpxml $src_vm_name --snapshotname "${line}" --security-info > "${line}.xml"
   sed -i -E "s/(.*<uuid>)${old_uuid}(<\/uuid>)/\1${new_uuid}\2/" "${line}.xml"
