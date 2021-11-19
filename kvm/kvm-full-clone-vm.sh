@@ -24,11 +24,7 @@ virsh snapshot-list $src_vm_name --tree | sed -E "s/ *.{1,2} +//" | sed -E "s/\|
   sed -i -E "s/(.*<uuid>)${old_uuid}(<\/uuid>)/\1${new_uuid}\2/" "${line}.xml"
   sed -i -E "s/(.*<mac address=')${old_mac}('\/>)/\1${new_mac}\2/" "${line}.xml"
   sed -i -E "s/(.*<name>)${src_vm_name}(<\/name>)/\1${dst_vm_name}\2/" "${line}.xml"
-  sed -i -E "s/(.*<name>)${line}(<\/name>)/\1${new_snpsh_name}\2/" "${line}.xml"
-  sed -i -E "s/(.*<name>)${parrent_snpsh_name}(<\/name>)/\1${prev_snpsh_name}\2/" "${line}.xml"
   sed -i -E "s/(.*<source file='\/var\/lib\/libvirt\/images\/)${src_vm_name}(\.qcow2'\/>)/\1${dst_vm_name}\2/" "${line}.xml"
-  parrent_snpsh_name=${line}
-  prev_snpsh_name=${new_snpsh_name}
   virsh snapshot-create $dst_vm_name "${line}.xml" --redefine
   sleep 5
 done
